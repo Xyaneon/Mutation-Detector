@@ -19,4 +19,6 @@
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
 # Last modified: 9/25/2014
 
+import CentralDogma
+
 # TODO: Program code here satisfying requirement 1 of the assignment
