@@ -46,21 +46,55 @@ codon_table = {
     'UAA': ('Stop', '_'), 'UAG': ('Stop', '_'), 'UGA': ('Stop', '_')
 }
 
-def complement(original):
-    """Creates the complement of the given strand."""
-    # TODO
+def complementDNA(original):
+    """Creates the complement of the given DNA strand."""
+    result = ""
+    for base in original:
+        if base == 'A':
+            result += 'T'
+        elif base == 'T':
+            result += 'A'
+        elif base == 'C':
+            result += 'G'
+        elif base == 'G':
+            result += 'C'
+    return result
+
+def complementRNA(original):
+    """Creates the complement of the given RNA strand."""
+    result = ""
+    for base in original:
+        if base == 'A':
+            result += 'U'
+        elif base == 'U':
+            result += 'A'
+        elif base == 'C':
+            result += 'G'
+        elif base == 'G':
+            result += 'C'
+    return result
 
 def translate(rna):
     """Translates the given RNA sequence."""
     # TODO
 
 def transcribe(dna):
-    """Translates the given DNA sequence."""
-    # TODO
+    """Transcribes the given DNA sequence."""
+    result = ""
+    for base in original:
+        if base == 'A':
+            result += 'U'
+        elif base == 'T':
+            result += 'A'
+        elif base == 'C':
+            result += 'G'
+        elif base == 'G':
+            result += 'C'
+    return result
 
 def reverse(strand):
     """Reverses the given strand."""
-    # TODO
+    return strand[::-1]
 
 if '__name__' == '__main__':
     # TODO: Unit testing.
