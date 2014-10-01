@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 9/25/2014
+# Last modified: 10/1/2014
 
 codon_table = {
     'GCA': ('Ala', 'A'), 'GCC': ('Ala', 'A'), 'GCG': ('Ala', 'A'),
@@ -54,10 +54,12 @@ codon_table = {
     'UAA': ('Stop', '_'), 'UAG': ('Stop', '_'), 'UGA': ('Stop', '_')
 }
 
+stop_codons = ['UAA', 'UAG', 'UGA']
+
 def complementDNA(original):
     """Creates the complement of the given DNA strand."""
     result = ""
-    for base in original:
+    for base in original.upper():
         if base == 'A':
             result += 'T'
         elif base == 'T':
@@ -71,7 +73,7 @@ def complementDNA(original):
 def complementRNA(original):
     """Creates the complement of the given RNA strand."""
     result = ""
-    for base in original:
+    for base in original.upper():
         if base == 'A':
             result += 'U'
         elif base == 'U':
@@ -82,14 +84,22 @@ def complementRNA(original):
             result += 'C'
     return result
 
-def translate(rna):
+def translate(rna, single_letter_mode=True):
     """Translates the given RNA sequence."""
-    # TODO
+    start = rna.upper().find('AUG')
+    position = start
+    protein = ""
+    current_codon = 'AUG'
+    while current_codon not in stop_codons and (position + 3) < rna.length:
+        protein += codon_table[current_codon][1 if single_letter_mode else 0]
+        position += 3
+        current_codon = rna[position, position + 3].upper()
+    return protein
 
 def transcribe(dna):
     """Transcribes the given DNA sequence."""
     result = ""
-    for base in original:
+    for base in original.upper():
         if base == 'A':
             result += 'U'
         elif base == 'T':
