@@ -19,6 +19,8 @@
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
 # Last modified: 10/1/2014
 
+from string import maketrans
+
 codon_table = {
     'GCA': ('Ala', 'A'), 'GCC': ('Ala', 'A'), 'GCG': ('Ala', 'A'),
     'GCU': ('Ala', 'A'),
@@ -58,33 +60,19 @@ stop_codons = ['UAA', 'UAG', 'UGA']
 
 def complementDNA(original):
     """Creates the complement of the given DNA strand."""
-    result = ""
-    for base in original.upper():
-        if base == 'A':
-            result += 'T'
-        elif base == 'T':
-            result += 'A'
-        elif base == 'C':
-            result += 'G'
-        elif base == 'G':
-            result += 'C'
-    return result
+    base_in = "ATGC"
+    base_out = "TACG"
+    complementation_table = maketrans(base_in, base_out)
+    return original.translate(complementation_table)
 
 def complementRNA(original):
     """Creates the complement of the given RNA strand."""
-    result = ""
-    for base in original.upper():
-        if base == 'A':
-            result += 'U'
-        elif base == 'U':
-            result += 'A'
-        elif base == 'C':
-            result += 'G'
-        elif base == 'G':
-            result += 'C'
-    return result
+    base_in = "AUGC"
+    base_out = "UACG"
+    complementation_table = maketrans(base_in, base_out)
+    return original.translate(complementation_table)
 
-def translate(rna, single_letter_mode=True):
+def translate_sequence(rna, single_letter_mode=True):
     """Translates the given RNA sequence."""
     start = rna.upper().find('AUG')
     position = start
@@ -96,22 +84,15 @@ def translate(rna, single_letter_mode=True):
         current_codon = rna[position, position + 3].upper()
     return protein
 
-def transcribe(dna):
+def transcribe_sequence(dna):
     """Transcribes the given DNA sequence."""
-    result = ""
-    for base in original.upper():
-        if base == 'A':
-            result += 'U'
-        elif base == 'T':
-            result += 'A'
-        elif base == 'C':
-            result += 'G'
-        elif base == 'G':
-            result += 'C'
-    return result
+    base_in = "ATGC"
+    base_out = "UACG"
+    transcription_table = maketrans(base_in, base_out)
+    return original.translate(transcription_table)
 
-def reverse(strand):
-    """Reverses the given strand."""
+def reverse_sequence(strand):
+    """Reverses the given strand comprised of single letters."""
     return strand[::-1]
 
 if '__name__' == '__main__':
