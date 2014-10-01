@@ -20,7 +20,7 @@
 # Last modified: 10/1/2014
 
 import re
-from string import maketrans
+from string import find, maketrans
 
 codon_table = {
     'GCA': ('Ala', 'A'), 'GCC': ('Ala', 'A'), 'GCG': ('Ala', 'A'),
@@ -57,6 +57,7 @@ codon_table = {
     'UAA': ('Stop', '_'), 'UAG': ('Stop', '_'), 'UGA': ('Stop', '_')
 }
 
+start_codon = 'AUG'
 stop_codons = ['UAA', 'UAG', 'UGA']
 
 def complementDNA(original):
@@ -73,18 +74,41 @@ def complementRNA(original):
     complementation_table = maketrans(base_in, base_out)
     return original.translate(complementation_table)
 
+def _find_first_stop_codon(rna):
+    """Looks for the first stop codon in the given RNA sequence.
+    The stop codon position is returned (0-based).
+    This function assumes that position 0 holds the start codon.
+    If no stop codon is found, return -1."""
+    position = 3
+    while position < rna.length:
+        try:
+            if rna[position:position + 3] in stop_codons:
+                return position
+            position += 3
+        except IndexError:
+            return -1
+    return -1
+
+
 def translate_sequence(rna, single_letter_mode=True):
     """Translates the given RNA sequence."""
-    start = rna.upper().find('AUG')
-    position = start
+    if rna.length < 3:
+        # Too short to code for anything
+        return ""
+    start_position = find(rna.upper(), start_codon)
+    if start_position == -1:
+        # No start codon found, so no resulting protein sequence
+        return ""
+    rel_rna = rna[start_position:]
+    stop_position = _find_first_stop_codon(rel_rna)
+    if stop_position != -1:
+        rel_rna = rel_rna[:stop_position]
     protein = ""
-    current_codon = 'AUG'
     mode_selector = 1 if single_letter_mode else 0
-    output_codons = dict((re.escape(codon), amino_acid[mode_selector]) \
-                          for codon, amino_acid in codon_table.iteritems())
-    pattern = re.compile("|".join(output_codons.keys()))
-    # TODO: trim RNA sequence to first start codon and first following stop
-    protein = pattern.sub(lambda m: output_codons[re.escape(m.group(0))], text)
+    amino_acids = dict((re.escape(codon), amino_acid[mode_selector])
+                        for codon, amino_acid in codon_table.iteritems())
+    pattern = re.compile("|".join(amino_acids.keys()))
+    protein = pattern.sub(lambda m: amino_acids[re.escape(m.group(0))], rel_rna)
     return protein
 
 def transcribe_sequence(dna):
