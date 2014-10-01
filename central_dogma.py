@@ -19,6 +19,7 @@
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
 # Last modified: 10/1/2014
 
+import re
 from string import maketrans
 
 codon_table = {
@@ -78,10 +79,12 @@ def translate_sequence(rna, single_letter_mode=True):
     position = start
     protein = ""
     current_codon = 'AUG'
-    while current_codon not in stop_codons and (position + 3) < rna.length:
-        protein += codon_table[current_codon][1 if single_letter_mode else 0]
-        position += 3
-        current_codon = rna[position, position + 3].upper()
+    mode_selector = 1 if single_letter_mode else 0
+    output_codons = dict((re.escape(codon), amino_acid[mode_selector]) \
+                          for codon, amino_acid in codon_table.iteritems())
+    pattern = re.compile("|".join(output_codons.keys()))
+    # TODO: trim RNA sequence to first start codon and first following stop
+    protein = pattern.sub(lambda m: output_codons[re.escape(m.group(0))], text)
     return protein
 
 def transcribe_sequence(dna):
