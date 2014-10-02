@@ -91,7 +91,8 @@ def _find_first_stop_codon(rna):
 
 
 def translate_sequence(rna, single_letter_mode=True):
-    """Translates the given RNA sequence."""
+    """Translates the given RNA sequence.
+    This assumes that the 5' end comes first."""
     if rna.length < 3:
         # Too short to code for anything
         return ""
@@ -111,15 +112,16 @@ def translate_sequence(rna, single_letter_mode=True):
     protein = pattern.sub(lambda m: amino_acids[re.escape(m.group(0))], rel_rna)
     return protein
 
-def transcribe_sequence(dna):
-    """Transcribes the given DNA sequence."""
-    base_in = "ATGC"
-    base_out = "UACG"
+def transcribe_coding_sequence(dna):
+    """Transcribes the given DNA coding sequence."""
+    base_in = "AT"
+    base_out = "UA"
     transcription_table = maketrans(base_in, base_out)
     return original.translate(transcription_table)
 
 def reverse_sequence(strand):
-    """Reverses the given strand comprised of single letters."""
+    """Reverses the given strand comprised of single letters.
+    This basically switches whether the 5' or 3' end comes first."""
     return strand[::-1]
 
 if '__name__' == '__main__':
