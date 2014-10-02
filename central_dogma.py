@@ -74,6 +74,13 @@ def complementRNA(original):
     complementation_table = maketrans(base_in, base_out)
     return original.translate(complementation_table)
 
+def _find_start_codon(rna):
+    """Finds the first start codon in the provided RNA sequence.
+    It's assumed that the 5' end comes first in the given sequence.
+    The start codon position is returned (0-based).
+    If no start codon is found, -1 is returned."""
+    return find(rna.upper(), start_codon)
+
 def _find_first_stop_codon(rna):
     """Looks for the first stop codon in the given RNA sequence.
     The stop codon position is returned (0-based).
@@ -89,14 +96,13 @@ def _find_first_stop_codon(rna):
             return -1
     return -1
 
-
-def translate_sequence(rna, single_letter_mode=True):
-    """Translates the given RNA sequence.
-    This assumes that the 5' end comes first."""
+def trim_to_coding_rna(rna):
+    """Trims the given RNA sequence, 5' first, to the part which actually codes
+    for the protein."""
     if rna.length < 3:
         # Too short to code for anything
         return ""
-    start_position = find(rna.upper(), start_codon)
+    start_position = _find_start_codon(rna)
     if start_position == -1:
         # No start codon found, so no resulting protein sequence
         return ""
@@ -104,6 +110,15 @@ def translate_sequence(rna, single_letter_mode=True):
     stop_position = _find_first_stop_codon(rel_rna)
     if stop_position != -1:
         rel_rna = rel_rna[:stop_position]
+    return rel_rna
+
+def translate_sequence(rna, single_letter_mode=True):
+    """Translates the given RNA sequence into a amino acid sequence (protein).
+    This assumes that the 5' end comes first.
+    The amino acid sequence is returned, N end first."""
+    rel_rna = trim_to_coding_rna(rna)
+    if rel_rna == "":
+        return ""
     protein = ""
     mode_selector = 1 if single_letter_mode else 0
     amino_acids = dict((re.escape(codon), amino_acid[mode_selector])
@@ -121,8 +136,31 @@ def transcribe_coding_sequence(dna):
 
 def reverse_sequence(strand):
     """Reverses the given strand comprised of single letters.
-    This basically switches whether the 5' or 3' end comes first."""
+    This basically switches whether the 5'/N or 3'/C end comes first."""
     return strand[::-1]
 
 if '__name__' == '__main__':
-    # TODO: Unit testing.
+    # Unit testing.
+    # From BioBackground section, p.37, of our class textbook.
+    non_template_dna = "CGAAGGAATGCACGCCTATTAGGGACCC"
+    template_dna     = "GCTTCCTTACGTGCGGATAATCCCTGGG"
+    rna              = "CGAAGGAAUGCACGCCUAUUAGGGACCC"
+    coding_sequence  = "AUGCACGCCUAUUAG"
+    protein_3letter  = "MetHisAlaTyr"
+    protein_1letter  = "MHAY"
+
+    # Test above functions
+    if non_template_dna != complement_DNA(template_dna):
+        print "complement_dna function test failed"
+        print "\ttemplate:", template_dna
+        print "\tresult  :", complement_DNA(template_dna)
+    elif transcribe_coding_sequence(non_template_dna) != rna:
+        print "transcribe_coding_sequence function test failed"
+        print "\trna     :", rna
+        print "\tresult  :", transcribe_coding_sequence(non_template_dna)
+    elif _find_start_codon(rna) != 7:
+        print "_find_start_codon function test failed"
+        print "\trna     :", rna
+        print "\tresult  :", _find_start_codon(rna)
+    else:
+        print "Unit testing passed for central_dogma module."
