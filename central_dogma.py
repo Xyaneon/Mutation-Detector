@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/1/2014
+# Last modified: 10/2/2014
 
 import re
 from string import find, maketrans

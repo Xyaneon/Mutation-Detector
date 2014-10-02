@@ -19,16 +19,4 @@
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
 # Last modified: 10/2/2014
 
-import argparse
-
-import central_dogma
-
-parser = argparse.ArgumentParser()
-parser.add_argument("infile1", help="file containing the first sequence " +
-                    "in FASTA format", type=str)
-parser.add_argument("infile2", help="file containing the second sequence " +
-                    "in FASTA format", type=str)
-parser.add_argument("--outfile", help="Filename for the output file", type=str)
-parser.parse_args()
-
-# TODO: Program code here satisfying requirement 1 of the assignment
+# TODO: add code here for mutation comparisons
