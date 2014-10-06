@@ -60,14 +60,14 @@ codon_table = {
 start_codon = 'AUG'
 stop_codons = ['UAA', 'UAG', 'UGA']
 
-def complementDNA(original):
+def complement_DNA(original):
     """Creates the complement of the given DNA strand."""
     base_in = "ATGC"
     base_out = "TACG"
     complementation_table = maketrans(base_in, base_out)
     return original.translate(complementation_table)
 
-def complementRNA(original):
+def complement_RNA(original):
     """Creates the complement of the given RNA strand."""
     base_in = "AUGC"
     base_out = "UACG"
@@ -132,14 +132,14 @@ def transcribe_coding_sequence(dna):
     base_in = "AT"
     base_out = "UA"
     transcription_table = maketrans(base_in, base_out)
-    return original.translate(transcription_table)
+    return dna.translate(transcription_table)
 
 def reverse_sequence(strand):
     """Reverses the given strand comprised of single letters.
     This basically switches whether the 5'/N or 3'/C end comes first."""
     return strand[::-1]
 
-if '__name__' == '__main__':
+if __name__ == '__main__':
     # Unit testing.
     # From BioBackground section, p.37, of our class textbook.
     non_template_dna = "CGAAGGAATGCACGCCTATTAGGGACCC"
