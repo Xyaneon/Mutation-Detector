@@ -87,7 +87,7 @@ def _find_first_stop_codon(rna):
     This function assumes that position 0 holds the start codon.
     If no stop codon is found, return -1."""
     position = 3
-    while position < rna.length:
+    while position < len(rna):
         try:
             if rna[position:position + 3] in stop_codons:
                 return position
@@ -99,7 +99,7 @@ def _find_first_stop_codon(rna):
 def trim_to_coding_rna(rna):
     """Trims the given RNA sequence, 5' first, to the part which actually codes
     for the protein."""
-    if rna.length < 3:
+    if len(rna) < 3:
         # Too short to code for anything
         return ""
     start_position = _find_start_codon(rna)
@@ -129,8 +129,8 @@ def translate_sequence(rna, single_letter_mode=True):
 
 def transcribe_coding_sequence(dna):
     """Transcribes the given DNA coding sequence."""
-    base_in = "AT"
-    base_out = "UA"
+    base_in = "T"
+    base_out = "U"
     transcription_table = maketrans(base_in, base_out)
     return dna.translate(transcription_table)
 
@@ -162,5 +162,13 @@ if __name__ == '__main__':
         print "_find_start_codon function test failed"
         print "\trna     :", rna
         print "\tresult  :", _find_start_codon(rna)
+    elif translate_sequence(rna, True) != protein_1letter:
+        print "translate_sequence function test failed for 1-letter mode"
+        print "\tprotein_1letter:", protein_1letter
+        print "\tresult          :", translate_sequence(rna, True)
+    elif translate_sequence(rna, False) != protein_3letter:
+        print "translate_sequence function test failed for 3-letter mode"
+        print "\tprotein_3letter:", protein_3letter
+        print "\tresult          :", translate_sequence(rna, False)
     else:
         print "Unit testing passed for central_dogma module."
