@@ -19,4 +19,20 @@
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
 # Last modified: 10/2/2014
 
-# TODO: add code here for mutation comparisons
+def compare_amino_1letter(seq1, seq2, outfile=""):
+    '''Compares two amino acid sequences for substitution mutations.
+    Returns the number of mutations found.'''
+    mctr = 0
+    shorthand = ""
+    for i in range(0, len(aminoseq1) - 1):
+        if seq1[i] != seq2[i]:
+            # Output mutation shorthand, e.g., K136R
+            shorthand = seq1[i] + str(i+1) + seq2[i]
+            print shorthand
+            if outfile:
+                with open(outfile, 'a') as output_file:
+                    output_file.write(shorthand)
+            mctr += 1
+    if mctr == 0:
+        print "No mismatches found - strings are identical"
+    return mctr

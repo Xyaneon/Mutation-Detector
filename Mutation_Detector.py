@@ -22,6 +22,7 @@
 import argparse
 
 import central_dogma
+import sequence_comparison
 
 parser = argparse.ArgumentParser()
 parser.add_argument("infile1", help="file containing the first sequence " +
@@ -52,16 +53,4 @@ for line in lines2:
 aminoseq1 = translate_sequence(transcribe_coding_sequence(sequence1))
 aminoseq2 = translate_sequence(transcribe_coding_sequence(sequence2))
 
-mctr = 0
-shorthand = ""
-for i in range(0, len(aminoseq1) - 1):
-    if aminoseq1[i] != aminoseq2[i]:
-        # Output mutation shorthand, e.g., K136R
-        shorthand = aminoseq1[i] + str(i+1) + aminoseq2[i]
-        print shorthand
-        if args.outfile:
-            with open(outfile, 'a') as output_file:
-                output_file.write(shorthand)
-        mctr += 1
-if mctr == 0:
-    print "No mismatches found - strings are identical"
+sequence_comparison.compare_amino_1letter(aminoseq1, aminoseq2, args.outfile)
