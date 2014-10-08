@@ -49,8 +49,8 @@ for line in lines1:
 for line in lines2:
     sequence2 += line.upper()
 
-aminoseq1 = translate(transcribe(sequence1))
-aminoseq2 = translate(transcribe(sequence2))
+aminoseq1 = translate_sequence(transcribe_coding_sequence(sequence1))
+aminoseq2 = translate_sequence(transcribe_coding_sequence(sequence2))
 
 mctr = 0
 shorthand = ""
