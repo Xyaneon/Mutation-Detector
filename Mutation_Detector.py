@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/2/2014
+# Last modified: 10/7/2014
 
 import argparse
 
@@ -32,7 +32,21 @@ parser.add_argument("--outfile", help="Filename for the output file", type=str)
 parser.parse_args()
 
 infile1, infile2 = args.infile1, args.infile2
+outfile = ""
 if args.outfile:
     outfile = args.outfile
+
+# Read in sequences from FASTA files
+# Ignore first line since that's just header info, not part of the sequence
+lines1 = lines2 = []
+sequence1 = sequence2 = ""
+with open(infile1, 'r')
+    lines1 = infile1.readlines()[1:]
+with open(infile2, 'r')
+    lines2 = infile2.readlines()[1:]
+for line in lines1:
+    sequence1 += line
+for line in lines2:
+    sequence2 += line
 
 # TODO: Program code here satisfying requirement 1 of the assignment
