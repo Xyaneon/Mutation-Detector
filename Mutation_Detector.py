@@ -45,8 +45,8 @@ with open(infile1, 'r')
 with open(infile2, 'r')
     lines2 = infile2.readlines()[1:]
 for line in lines1:
-    sequence1 += line
+    sequence1 += line.upper()
 for line in lines2:
-    sequence2 += line
+    sequence2 += line.upper()
 
 # TODO: Program code here satisfying requirement 1 of the assignment
