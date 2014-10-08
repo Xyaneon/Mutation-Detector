@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/7/2014
+# Last modified: 10/8/2014
 
 import argparse
 
@@ -40,13 +40,28 @@ if args.outfile:
 # Ignore first line since that's just header info, not part of the sequence
 lines1 = lines2 = []
 sequence1 = sequence2 = ""
-with open(infile1, 'r')
-    lines1 = infile1.readlines()[1:]
-with open(infile2, 'r')
-    lines2 = infile2.readlines()[1:]
+with open(infile1, 'r') as infile1_reading:
+    lines1 = infile1_reading.readlines()[1:]
+with open(infile2, 'r') as infile2_reading:
+    lines2 = infile2_reading.readlines()[1:]
 for line in lines1:
     sequence1 += line.upper()
 for line in lines2:
     sequence2 += line.upper()
 
-# TODO: Program code here satisfying requirement 1 of the assignment
+aminoseq1 = translate(transcribe(sequence1))
+aminoseq2 = translate(transcribe(sequence2))
+
+mctr = 0
+shorthand = ""
+for i in range(0, len(aminoseq1) - 1):
+    if aminoseq1[i] != aminoseq2[i]:
+        # Output mutation shorthand, e.g., K136R
+        shorthand = aminoseq1[i] + str(i+1) + aminoseq2[i]
+        print shorthand
+        if args.outfile:
+            with open(outfile, 'a') as output_file:
+                output_file.write(shorthand)
+        mctr += 1
+if mctr == 0:
+    print "No mismatches found - strings are identical"
