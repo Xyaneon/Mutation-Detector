@@ -31,4 +31,8 @@ parser.add_argument("infile2", help="file containing the second sequence " +
 parser.add_argument("--outfile", help="Filename for the output file", type=str)
 parser.parse_args()
 
+infile1, infile2 = args.infile1, args.infile2
+if args.outfile:
+    outfile = args.outfile
+
 # TODO: Program code here satisfying requirement 1 of the assignment
