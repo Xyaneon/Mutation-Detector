@@ -24,7 +24,7 @@ def compare_amino_1letter(seq1, seq2, outfile=""):
     Returns the number of mutations found.'''
     mctr = 0
     shorthand = ""
-    for i in range(0, len(aminoseq1) - 1):
+    for i in range(0, len(seq1) - 1):
         if seq1[i] != seq2[i]:
             # Output mutation shorthand, e.g., K136R
             shorthand = seq1[i] + str(i+1) + seq2[i]

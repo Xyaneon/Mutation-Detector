@@ -21,7 +21,7 @@
 
 import argparse
 
-import central_dogma
+import central_dogma as cd
 import sequence_comparison
 
 parser = argparse.ArgumentParser()
@@ -30,7 +30,7 @@ parser.add_argument("infile1", help="file containing the first sequence " +
 parser.add_argument("infile2", help="file containing the second sequence " +
                     "in FASTA format", type=str)
 parser.add_argument("--outfile", help="Filename for the output file", type=str)
-parser.parse_args()
+args = parser.parse_args()
 
 infile1, infile2 = args.infile1, args.infile2
 outfile = ""
@@ -50,7 +50,7 @@ for line in lines1:
 for line in lines2:
     sequence2 += line.upper()
 
-aminoseq1 = translate_sequence(transcribe_coding_sequence(sequence1))
-aminoseq2 = translate_sequence(transcribe_coding_sequence(sequence2))
+aminoseq1 = cd.translate_sequence(cd.transcribe_coding_sequence(sequence1))
+aminoseq2 = cd.translate_sequence(cd.transcribe_coding_sequence(sequence2))
 
 sequence_comparison.compare_amino_1letter(aminoseq1, aminoseq2, args.outfile)
