@@ -39,6 +39,11 @@ parser.add_argument("infile1", help=infile_help, nargs=3)
 parser.add_argument("infile2", help=infile_help, nargs=3)
 parser.add_argument("-o", "--outfile", help="Filename for the output file",
                     type=str)
+comparison_group = parser.add_mutually_exclusive_group()
+comparison_group.add_argument("-d", "--DNA", help="Compare as 5' coding DNA.", action="store_true")
+comparison_group.add_argument("-r", "--mRNA", help="Compare as mRNA.", action="store_true")
+comparison_group.add_argument("-p", "--protein", help="Compare as proteins.", action="store_true")
+comparison_group.add_argument("-a", "--all", help="Compare as DNA, mRNA, and proteins.", action="store_true")
 args = parser.parse_args()
 print args
 
@@ -78,6 +83,10 @@ if args.infile2[1] in ["3'", "3"]:
     print "Sequence 2 is 3'; reversing..."
     sequence2 = cd.reverse_sequence(sequence2)
 
+if args.DNA:
+    sequence_comparison.compare_sequences(sequence1, sequence2, args.outfile)
+    exit(0)
+
 # Debug
 print "Sequence 1:"
 print sequence1
@@ -86,6 +95,10 @@ print sequence2
 
 mRNA1 = cd.transcribe_coding_sequence(sequence1)
 mRNA2 = cd.transcribe_coding_sequence(sequence2)
+
+if args.mRNA:
+    sequence_comparison.compare_sequences(mRNA1, mRNA2, args.outfile)
+    exit(0)
 
 # Debug
 print "mRNA 1:"

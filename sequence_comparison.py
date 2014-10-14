@@ -23,6 +23,11 @@ def compare_sequences(seq1, seq2, outfile=""):
     '''Compares two single-character sequences for substitution mutations.
     Returns the number of mutations found.
     Expects both sequences to be of the same length.'''
+    if len(seq1) != len(seq2):
+        difference = abs(len(seq1) - len(seq2))
+        print "Sequences are not the same length;"
+        print "they differ by", str(difference), "characters."
+        return difference
     mctr = 0
     shorthand = ""
     for i in range(0, len(seq1) - 1):
