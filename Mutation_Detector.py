@@ -24,7 +24,14 @@ import argparse
 import central_dogma as cd
 import sequence_comparison
 
-parser = argparse.ArgumentParser()
+version = "v0.0.0"
+desc = "Mutation Detector " + version
+desc += "\nA utility for finding mutations between FASTA sequences."
+
+parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=desc
+            )
 parser.add_argument("infile1", help="file containing the first sequence " +
                     "in FASTA format", type=str)
 parser.add_argument("infile2", help="file containing the second sequence " +
