@@ -83,7 +83,7 @@ if args.infile2[1] in ["3'", "3"]:
     print "Sequence 2 is 3'; reversing..."
     sequence2 = cd.reverse_sequence(sequence2)
 
-if args.DNA:
+if args.DNA or args.all:
     sequence_comparison.compare_sequences(sequence1, sequence2, args.outfile)
     exit(0)
 
@@ -96,7 +96,7 @@ print sequence2
 mRNA1 = cd.transcribe_coding_sequence(sequence1)
 mRNA2 = cd.transcribe_coding_sequence(sequence2)
 
-if args.mRNA:
+if args.mRNA or args.all:
     sequence_comparison.compare_sequences(mRNA1, mRNA2, args.outfile)
     exit(0)
 
@@ -115,4 +115,5 @@ print aminoseq1
 print "Amino Sequence 2:"
 print aminoseq2
 
-sequence_comparison.compare_sequences(aminoseq1, aminoseq2, args.outfile)
+if not (args.DNA or args.mRNA):
+    sequence_comparison.compare_sequences(aminoseq1, aminoseq2, args.outfile)
