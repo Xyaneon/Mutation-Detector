@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/8/2014
+# Last modified: 10/14/2014
 
 import argparse
 
@@ -27,31 +27,31 @@ import sequence_comparison
 version = "v0.0.0"
 desc = "Mutation Detector " + version
 desc += "\nA utility for finding mutations between FASTA sequences."
+infile_help="""
+Takes three strings indicating coding or template, 3' or 5', and filename.
+"""
 
 parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=desc
             )
-parser.add_argument("infile1", help="file containing the first sequence " +
-                    "in FASTA format", type=str)
-parser.add_argument("infile2", help="file containing the second sequence " +
-                    "in FASTA format", type=str)
+parser.add_argument("infile1", help=infile_help, nargs=3)
+parser.add_argument("infile2", help=infile_help, nargs=3)
 parser.add_argument("-o", "--outfile", help="Filename for the output file",
                     type=str)
 args = parser.parse_args()
+print args
 
-infile1, infile2 = args.infile1, args.infile2
 outfile = ""
 if args.outfile:
     outfile = args.outfile
 
 # Read in sequences from FASTA files
 # Ignore first line since that's just header info, not part of the sequence
-lines1 = lines2 = []
 sequence1 = sequence2 = ""
-with open(infile1, 'r') as infile1_reading:
+with open(args.infile1[2], 'r') as infile1_reading:
     lines1 = infile1_reading.readlines()[1:]
-with open(infile2, 'r') as infile2_reading:
+with open(args.infile2[2], 'r') as infile2_reading:
     lines2 = infile2_reading.readlines()[1:]
 for line in lines1:
     sequence1 += line.upper().strip()
@@ -61,16 +61,27 @@ for line in lines2:
 # Debug
 print "Sequence 1:"
 print sequence1
-print "\nSequence 2:"
+print "Sequence 2:"
 print sequence2
 
-sequence1 = cd.reverse_sequence(sequence1)
-sequence2 = cd.reverse_sequence(sequence2)
+if args.infile1[0] in ["t", "template"]:
+    print "Sequence 1 is ", args.infile1[0], "; complementing..."
+    sequence1 = cd.complement_DNA(sequence1)
+if args.infile2[0] in ["t", "template"]:
+    print "Sequence 2 is ", args.infile1[0], "; complementing..."
+    sequence2 = cd.complement_DNA(sequence2)
+
+if args.infile1[1] in ["3'", "3"]:
+    print "Sequence 1 is 3'; reversing..."
+    sequence1 = cd.reverse_sequence(sequence1)
+if args.infile2[1] in ["3'", "3"]:
+    print "Sequence 2 is 3'; reversing..."
+    sequence2 = cd.reverse_sequence(sequence2)
 
 # Debug
 print "Sequence 1:"
 print sequence1
-print "\nSequence 2:"
+print "Sequence 2:"
 print sequence2
 
 mRNA1 = cd.transcribe_coding_sequence(sequence1)
@@ -79,7 +90,7 @@ mRNA2 = cd.transcribe_coding_sequence(sequence2)
 # Debug
 print "mRNA 1:"
 print mRNA1
-print "\nmRNA 2:"
+print "mRNA 2:"
 print mRNA2
 
 aminoseq1 = cd.translate_sequence(mRNA1)
@@ -88,7 +99,7 @@ aminoseq2 = cd.translate_sequence(mRNA2)
 # Debug
 print "Amino Sequence 1:"
 print aminoseq1
-print "\nAmino Sequence 2:"
+print "Amino Sequence 2:"
 print aminoseq2
 
-sequence_comparison.compare_amino_1letter(aminoseq1, aminoseq2, args.outfile)
+sequence_comparison.compare_sequences(aminoseq1, aminoseq2, args.outfile)

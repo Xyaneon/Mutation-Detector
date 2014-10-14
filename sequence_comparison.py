@@ -17,11 +17,12 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/2/2014
+# Last modified: 10/14/2014
 
-def compare_amino_1letter(seq1, seq2, outfile=""):
-    '''Compares two amino acid sequences for substitution mutations.
-    Returns the number of mutations found.'''
+def compare_sequences(seq1, seq2, outfile=""):
+    '''Compares two single-character sequences for substitution mutations.
+    Returns the number of mutations found.
+    Expects both sequences to be of the same length.'''
     mctr = 0
     shorthand = ""
     for i in range(0, len(seq1) - 1):
