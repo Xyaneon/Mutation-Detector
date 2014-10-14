@@ -29,7 +29,8 @@ parser.add_argument("infile1", help="file containing the first sequence " +
                     "in FASTA format", type=str)
 parser.add_argument("infile2", help="file containing the second sequence " +
                     "in FASTA format", type=str)
-parser.add_argument("--outfile", help="Filename for the output file", type=str)
+parser.add_argument("-o", "--outfile", help="Filename for the output file",
+                    type=str)
 args = parser.parse_args()
 
 infile1, infile2 = args.infile1, args.infile2
