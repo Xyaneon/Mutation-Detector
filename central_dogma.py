@@ -93,7 +93,9 @@ def _find_first_stop_codon(rna):
                 return position
             position += 3
         except IndexError:
+            print "No stop codon found."
             return -1
+    print "No stop codon found."
     return -1
 
 def trim_to_coding_rna(rna):
@@ -101,10 +103,12 @@ def trim_to_coding_rna(rna):
     for the protein."""
     if len(rna) < 3:
         # Too short to code for anything
+        print "Sequence too short to code for anything."
         return ""
     start_position = _find_start_codon(rna)
     if start_position == -1:
         # No start codon found, so no resulting protein sequence
+        print "No start codon found."
         return ""
     rel_rna = rna[start_position:]
     stop_position = _find_first_stop_codon(rel_rna)

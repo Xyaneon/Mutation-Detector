@@ -46,11 +46,41 @@ with open(infile1, 'r') as infile1_reading:
 with open(infile2, 'r') as infile2_reading:
     lines2 = infile2_reading.readlines()[1:]
 for line in lines1:
-    sequence1 += line.upper()
+    sequence1 += line.upper().strip()
 for line in lines2:
-    sequence2 += line.upper()
+    sequence2 += line.upper().strip()
 
-aminoseq1 = cd.translate_sequence(cd.transcribe_coding_sequence(sequence1))
-aminoseq2 = cd.translate_sequence(cd.transcribe_coding_sequence(sequence2))
+# Debug
+print "Sequence 1:"
+print sequence1
+print "\nSequence 2:"
+print sequence2
+
+sequence1 = cd.reverse_sequence(sequence1)
+sequence2 = cd.reverse_sequence(sequence2)
+
+# Debug
+print "Sequence 1:"
+print sequence1
+print "\nSequence 2:"
+print sequence2
+
+mRNA1 = cd.transcribe_coding_sequence(sequence1)
+mRNA2 = cd.transcribe_coding_sequence(sequence2)
+
+# Debug
+print "mRNA 1:"
+print mRNA1
+print "\nmRNA 2:"
+print mRNA2
+
+aminoseq1 = cd.translate_sequence(mRNA1)
+aminoseq2 = cd.translate_sequence(mRNA2)
+
+# Debug
+print "Amino Sequence 1:"
+print aminoseq1
+print "\nAmino Sequence 2:"
+print aminoseq2
 
 sequence_comparison.compare_amino_1letter(aminoseq1, aminoseq2, args.outfile)
