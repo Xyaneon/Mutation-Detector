@@ -40,10 +40,22 @@ parser.add_argument("infile2", help=infile_help, nargs=3)
 parser.add_argument("-o", "--outfile", help="Filename for the output file",
                     type=str)
 comparison_group = parser.add_mutually_exclusive_group()
-comparison_group.add_argument("-d", "--DNA", help="Compare as 5' coding DNA.", action="store_true")
-comparison_group.add_argument("-r", "--mRNA", help="Compare as mRNA.", action="store_true")
-comparison_group.add_argument("-p", "--protein", help="Compare as proteins.", action="store_true")
-comparison_group.add_argument("-a", "--all", help="Compare as DNA, mRNA, and proteins.", action="store_true")
+comparison_group.add_argument("-d", "--DNA",
+                              help="Compare as 5' coding DNA.",
+                              action="store_true"
+                             )
+comparison_group.add_argument("-r", "--mRNA",
+                              help="Compare as mRNA.",
+                              action="store_true"
+                             )
+comparison_group.add_argument("-p", "--protein",
+                              help="Compare as proteins.",
+                              action="store_true"
+                             )
+comparison_group.add_argument("-a", "--all",
+                              help="Compare as DNA, mRNA, and proteins.",
+                              action="store_true"
+                             )
 args = parser.parse_args()
 print args
 
@@ -63,35 +75,19 @@ for line in lines1:
 for line in lines2:
     sequence2 += line.upper().strip()
 
-# Debug
-print "Sequence 1:"
-print sequence1
-print "Sequence 2:"
-print sequence2
-
 if args.infile1[0] in ["t", "template"]:
-    print "Sequence 1 is ", args.infile1[0], "; complementing..."
     sequence1 = cd.complement_DNA(sequence1)
 if args.infile2[0] in ["t", "template"]:
-    print "Sequence 2 is ", args.infile1[0], "; complementing..."
     sequence2 = cd.complement_DNA(sequence2)
 
 if args.infile1[1] in ["3'", "3"]:
-    print "Sequence 1 is 3'; reversing..."
     sequence1 = cd.reverse_sequence(sequence1)
 if args.infile2[1] in ["3'", "3"]:
-    print "Sequence 2 is 3'; reversing..."
     sequence2 = cd.reverse_sequence(sequence2)
 
 if args.DNA or args.all:
     sequence_comparison.compare_sequences(sequence1, sequence2, args.outfile)
     exit(0)
-
-# Debug
-print "Sequence 1:"
-print sequence1
-print "Sequence 2:"
-print sequence2
 
 mRNA1 = cd.transcribe_coding_sequence(sequence1)
 mRNA2 = cd.transcribe_coding_sequence(sequence2)
@@ -100,20 +96,8 @@ if args.mRNA or args.all:
     sequence_comparison.compare_sequences(mRNA1, mRNA2, args.outfile)
     exit(0)
 
-# Debug
-print "mRNA 1:"
-print mRNA1
-print "mRNA 2:"
-print mRNA2
-
 aminoseq1 = cd.translate_sequence(mRNA1)
 aminoseq2 = cd.translate_sequence(mRNA2)
-
-# Debug
-print "Amino Sequence 1:"
-print aminoseq1
-print "Amino Sequence 2:"
-print aminoseq2
 
 if not (args.DNA or args.mRNA):
     sequence_comparison.compare_sequences(aminoseq1, aminoseq2, args.outfile)
