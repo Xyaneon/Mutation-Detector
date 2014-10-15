@@ -57,7 +57,6 @@ comparison_group.add_argument("-a", "--all",
                               action="store_true"
                              )
 args = parser.parse_args()
-print args
 
 outfile = ""
 if args.outfile:
