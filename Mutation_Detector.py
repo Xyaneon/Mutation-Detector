@@ -17,18 +17,21 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/14/2014
+# Last modified: 10/15/2014
 
 import argparse
+import os.path
 
 import central_dogma as cd
+from results_output import ResultsOutput
 import sequence_comparison
 
-version = "v0.0.0"
+version = "v0.0.1"
 desc = "Mutation Detector " + version
 desc += "\nA utility for finding mutations between FASTA sequences."
 infile_help="""
-Takes three strings indicating coding or template, 3' or 5', and filename.
+Takes three strings indicating 1) coding, template, or mRNA, 2) 3' or 5', and
+3) filename.
 """
 
 def sequence_type_valid(sequence_type):
@@ -46,14 +49,42 @@ def sequence_type_is_DNA(sequence_type):
 
 def sequence_direction_valid(sequence_direction):
     """Predicate returning True iff this is a valid sequence direction."""
-    return sequence_type in ["3", "3'",
-                             "5", "5'"
-                            ]
+    return sequence_direction in ["3", "3'",
+                                  "5", "5'"
+                                 ]
+
+def validate_sequence_options(seqopt1, seqopt2):
+    """Checks the sequence options for validity."""
+    sequence_type1 = seqopt1[0].lower()
+    sequence_type2 = seqopt2[0].lower()
+    if not sequence_type_valid(sequence_type1):
+        print "Invalid type for first sequence:", sequence_type1
+        exit(1)
+    if not sequence_type_valid(sequence_type2):
+        print "Invalid type for second sequence:", sequence_type2
+        exit(1)
+    sequence_direction1 = seqopt1[1].lower()
+    sequence_direction2 = seqopt2[1].lower()
+    if not sequence_direction_valid(sequence_direction1):
+        print "Invalid direction for first sequence:", sequence_direction1
+        exit(1)
+    if not sequence_direction_valid(sequence_direction2):
+        print "Invalid direction for second sequence:", sequence_direction2
+        exit(1)
+    path1 = seqopt1[2]
+    path2 = seqopt2[2]
+    if not os.path.exists(path1):
+        print "First file does not exist:", path1
+        exit(1)
+    if not os.path.exists(path2):
+        print "Second file does not exist:", path2
+        exit(1)
 
 #============================================================================
 # Main program code
 #============================================================================
 
+# Set up commandline argument parser
 parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=desc
@@ -72,51 +103,59 @@ comparison_group.add_argument("-r", "--mRNA",
                               action="store_true"
                              )
 comparison_group.add_argument("-p", "--protein",
-                              help="Compare as proteins.",
+                              help="Compare as proteins (default).",
                               action="store_true"
                              )
 comparison_group.add_argument("-a", "--all",
-                              help="Compare as DNA, mRNA, and proteins.",
+                              help="Compare as DNA, mRNA, and protein.",
                               action="store_true"
+                             )
+comparison_group.add_argument("-c", "--compare-as",
+                              help="Compare as DNA, mRNA, protein, or all.",
+                              choices=["DNA", "mRNA", "protein", "all"],
+                              type=str
                              )
 args = parser.parse_args()
 
 outfile = ""
 if args.outfile:
     outfile = args.outfile
+output = ResultsOutput(outfile)
 
 # Verify commandline options
+validate_sequence_options(args.infile1, args.infile2)
 sequence_type1 = args.infile1[0].lower()
 sequence_type2 = args.infile2[0].lower()
-if not sequence_type_valid(sequence_type1):
-    print "Invalid type for first sequence:", sequence_type1
-    exit(1)
-if not sequence_type_valid(sequence_type2):
-    print "Invalid type for second sequence:", sequence_type2
-    exit(1)
 sequence_direction1 = args.infile1[1].lower()
 sequence_direction2 = args.infile2[1].lower()
-if not sequence_direction_valid(sequence_direction1):
-    print "Invalid direction for first sequence:", sequence_direction1
-    exit(1)
-if not sequence_direction_valid(sequence_direction2):
-    print "Invalid direction for second sequence:", sequence_direction2
-    exit(1)
+path1 = args.infile1[2]
+path2 = args.infile2[2]
+comparison_choice = "protein"
+if args.compare_as:
+    comparison_choice = args.compare_as
+if args.DNA:
+    comparison_choice = "DNA"
+if args.mRNA:
+    comparison_choice = "mRNA"
+if args.protein:
+    comparison_choice = "protein"
+if args.all:
+    comparison_choice = "all"
 
 # Read in sequences from FASTA files
 # Ignore first line since that's just header info, not part of the sequence
 sequence1 = sequence2 = ""
 try:
-    with open(args.infile1[2], 'r') as infile1_reading:
+    with open(path1, 'r') as infile1_reading:
         lines1 = infile1_reading.readlines()[1:]
 except IOError:
-    print "Error: could not open file:", args.infile1[2]
+    print "Error: could not open first file:", args.infile1[2]
     exit(1)
 try:
-    with open(args.infile2[2], 'r') as infile2_reading:
+    with open(path2, 'r') as infile2_reading:
         lines2 = infile2_reading.readlines()[1:]
 except IOError:
-    print "Error: could not open file:", args.infile2[2]
+    print "Error: could not open second file:", args.infile2[2]
     exit(1)
 for line in lines1:
     sequence1 += line.upper().strip()
@@ -130,28 +169,61 @@ if args.infile2[1] in ["3'", "3"]:
     sequence2 = cd.reverse_sequence(sequence2)
 
 DNA1 = DNA2 = ""
+mRNA1 = mRNA2 = ""
+protein1 = protein2 = ""
 if sequence_type_is_DNA(sequence_type1):
     if sequence_type1 in ["t", "template"]:
-        sequence1 = cd.complement_DNA(sequence1)
-    DNA1 = sequence1
+        DNA1 = cd.complement_DNA(sequence1)
+    elif sequence_type1 in ["c", "coding"]:
+        DNA1 = sequence1
+    elif sequence_type1 in ["r", "mRNA"]:
+        mRNA1 = sequence1
+    else:
+        print "Unrecognized sequence type."
+        exit(1)
 if sequence_type_is_DNA(sequence_type2):
     if sequence_type2 in ["t", "template"]:
-        sequence2 = cd.complement_DNA(sequence2)
-    DNA2 = sequence2
+        DNA2 = cd.complement_DNA(sequence2)
+    elif sequence_type2 in ["c", "coding"]:
+        DNA2 = sequence2
+    elif sequence_type2 in ["r", "mRNA"]:
+        mRNA2 = sequence2
+    else:
+        print "Unrecognized sequence type."
+        exit(1)
 
-if args.DNA or args.all:
-    sequence_comparison.compare_sequences(DNA1, DNA2, args.outfile)
-    exit(0)
+if comparison_choice in ["DNA", "all"]:
+    if sequence_type_is_DNA(sequence_type1) and sequence_type_is_DNA(sequence_type2):
+        if comparison_choice == "all":
+            output.write_output("DNA sequence mutations:")
+        sequence_comparison.compare_sequences(DNA1, DNA2, output)
+        if comparison_choice == "DNA":
+            exit(0)
+    else:
+        print "Cannot compare non-DNA input sequence(s) as DNA."
+        exit(1)
 
-mRNA1 = cd.transcribe_coding_sequence(DNA1)
-mRNA2 = cd.transcribe_coding_sequence(DNA2)
+if sequence_type_is_DNA(sequence_type1):
+    mRNA1 = cd.transcribe_coding_sequence(DNA1)
+if sequence_type_is_DNA(sequence_type2):
+    mRNA2 = cd.transcribe_coding_sequence(DNA2)
 
-if args.mRNA or args.all:
-    sequence_comparison.compare_sequences(mRNA1, mRNA2, args.outfile)
-    exit(0)
+if comparison_choice in ["mRNA", "all"]:
+    if mRNA1 and mRNA2:
+        if comparison_choice == "all":
+            output.write_output("mRNA sequence mutations:")
+        sequence_comparison.compare_sequences(mRNA1, mRNA2, output)
+        if comparison_choice == "mRNA":
+            exit(0)
+    else:
+        print "Cannot compare as mRNA sequences."
+        exit(1)
 
-aminoseq1 = cd.translate_sequence(mRNA1)
-aminoseq2 = cd.translate_sequence(mRNA2)
+if comparison_choice in ["protein", "all"]:
+    protein1 = cd.translate_sequence(mRNA1)
+    protein2 = cd.translate_sequence(mRNA2)
+    if comparison_choice == "all":
+        output.write_output("Amino acid sequence mutations:")
+    sequence_comparison.compare_sequences(protein1, protein2, output)
 
-if not (args.DNA or args.mRNA):
-    sequence_comparison.compare_sequences(aminoseq1, aminoseq2, args.outfile)
+exit(0)

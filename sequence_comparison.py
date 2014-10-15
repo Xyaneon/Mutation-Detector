@@ -17,21 +17,19 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/14/2014
+# Last modified: 10/15/2014
 
-def compare_sequences(seq1, seq2, outfile=""):
+from results_output import ResultsOutput
+
+def compare_sequences(seq1, seq2, output):
     '''Compares two single-character sequences for substitution mutations.
     Returns the number of mutations found.
     Expects both sequences to be of the same length.'''
     if len(seq1) != len(seq2):
         difference = abs(len(seq1) - len(seq2))
-        if outfile:
-            with open(outfile, 'a') as f:
-                f.write("Sequences are not the same length;")
-                f.write("they differ by " + str(difference) + "characters.")
-        else:
-            print "Sequences are not the same length;"
-            print "they differ by", str(difference), "characters."
+        differ_len = "Sequences are not the same length; "
+        differ_len += "they differ by " + str(difference) + " characters."
+        output.write_output(differ_len)
         return difference
     mctr = 0
     shorthand = ""
@@ -39,16 +37,9 @@ def compare_sequences(seq1, seq2, outfile=""):
         if seq1[i] != seq2[i]:
             # Output mutation shorthand, e.g., K136R
             shorthand = seq1[i] + str(i+1) + seq2[i]
-            if outfile:
-                with open(outfile, 'a') as f:
-                    f.write(shorthand)
-            else:
-                print shorthand
+            output.write_output(shorthand)
             mctr += 1
     if mctr == 0:
-        if outfile:
-            with open(outfile, 'a') as f:
-                f.write("No mismatches found - strings are identical")
-        else:
-            print "No mismatches found - strings are identical"
+        identical = "No mismatches found - strings are identical"
+        output.write_output(identical)
     return mctr
