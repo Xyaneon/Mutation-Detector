@@ -26,7 +26,7 @@ import central_dogma as cd
 from results_output import ResultsOutput
 import sequence_comparison
 
-version = "v0.0.1"
+version = "v1.0.0"
 desc = "Mutation Detector " + version
 desc += "\nA utility for finding mutations between FASTA sequences."
 infile_help="""
