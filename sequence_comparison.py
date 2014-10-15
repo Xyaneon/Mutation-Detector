@@ -33,7 +33,7 @@ def compare_sequences(seq1, seq2, output):
         return difference
     mctr = 0
     shorthand = ""
-    for i in range(0, len(seq1) - 1):
+    for i in range(0, len(seq1)):
         if seq1[i] != seq2[i]:
             # Output mutation shorthand, e.g., K136R
             shorthand = seq1[i] + str(i+1) + seq2[i]
