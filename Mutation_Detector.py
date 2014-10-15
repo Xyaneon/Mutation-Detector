@@ -31,6 +31,29 @@ infile_help="""
 Takes three strings indicating coding or template, 3' or 5', and filename.
 """
 
+def sequence_type_valid(sequence_type):
+    """Predicate returning True iff this is a valid sequence type."""
+    return sequence_type in ["t", "template",
+                             "c", "coding",
+                             "r", "mRNA"
+                            ]
+
+def sequence_type_is_DNA(sequence_type):
+    """Predicate returning True iff this is a DNA sequence type."""
+    return sequence_type in ["t", "template",
+                             "c", "coding"
+                            ]
+
+def sequence_direction_valid(sequence_direction):
+    """Predicate returning True iff this is a valid sequence direction."""
+    return sequence_type in ["3", "3'",
+                             "5", "5'"
+                            ]
+
+#============================================================================
+# Main program code
+#============================================================================
+
 parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=desc
@@ -62,42 +85,66 @@ outfile = ""
 if args.outfile:
     outfile = args.outfile
 
+# Verify commandline options
+sequence_type1 = args.infile1[0].lower()
+sequence_type2 = args.infile2[0].lower()
+if not sequence_type_valid(sequence_type1):
+    print "Invalid type for first sequence:", sequence_type1
+    exit(1)
+if not sequence_type_valid(sequence_type2):
+    print "Invalid type for second sequence:", sequence_type2
+    exit(1)
+sequence_direction1 = args.infile1[1].lower()
+sequence_direction2 = args.infile2[1].lower()
+if not sequence_direction_valid(sequence_direction1):
+    print "Invalid direction for first sequence:", sequence_direction1
+    exit(1)
+if not sequence_direction_valid(sequence_direction2):
+    print "Invalid direction for second sequence:", sequence_direction2
+    exit(1)
+
 # Read in sequences from FASTA files
 # Ignore first line since that's just header info, not part of the sequence
 sequence1 = sequence2 = ""
-with open(args.infile1[2], 'r') as infile1_reading:
-    lines1 = infile1_reading.readlines()[1:]
-with open(args.infile2[2], 'r') as infile2_reading:
-    lines2 = infile2_reading.readlines()[1:]
+try:
+    with open(args.infile1[2], 'r') as infile1_reading:
+        lines1 = infile1_reading.readlines()[1:]
+except IOError:
+    print "Error: could not open file:", args.infile1[2]
+    exit(1)
+try:
+    with open(args.infile2[2], 'r') as infile2_reading:
+        lines2 = infile2_reading.readlines()[1:]
+except IOError:
+    print "Error: could not open file:", args.infile2[2]
+    exit(1)
 for line in lines1:
     sequence1 += line.upper().strip()
 for line in lines2:
     sequence2 += line.upper().strip()
 
-sequence_type1 = args.infile1[0].lower()
-sequence_type2 = args.infile2[0].lower()
-if sequence_type1 in ["t", "template"]:
-    sequence1 = cd.complement_DNA(sequence1)
-elif sequence_type1 not in ["c", "coding", "r", "mRNA"]:
-    print "Unrecognized sequence type for first sequence:", sequence_type1
-    exit(1)
-if sequence_type2 in ["t", "template"]:
-    sequence2 = cd.complement_DNA(sequence2)
-elif sequence_type2 not in ["c", "coding", "r", "mRNA"]:
-    print "Unrecognized sequence type for second sequence:", sequence_type2
-    exit(1)
-
+# Process sequences after reading
 if args.infile1[1] in ["3'", "3"]:
     sequence1 = cd.reverse_sequence(sequence1)
 if args.infile2[1] in ["3'", "3"]:
     sequence2 = cd.reverse_sequence(sequence2)
 
+DNA1 = DNA2 = ""
+if sequence_type_is_DNA(sequence_type1):
+    if sequence_type1 in ["t", "template"]:
+        sequence1 = cd.complement_DNA(sequence1)
+    DNA1 = sequence1
+if sequence_type_is_DNA(sequence_type2):
+    if sequence_type2 in ["t", "template"]:
+        sequence2 = cd.complement_DNA(sequence2)
+    DNA2 = sequence2
+
 if args.DNA or args.all:
-    sequence_comparison.compare_sequences(sequence1, sequence2, args.outfile)
+    sequence_comparison.compare_sequences(DNA1, DNA2, args.outfile)
     exit(0)
 
-mRNA1 = cd.transcribe_coding_sequence(sequence1)
-mRNA2 = cd.transcribe_coding_sequence(sequence2)
+mRNA1 = cd.transcribe_coding_sequence(DNA1)
+mRNA2 = cd.transcribe_coding_sequence(DNA2)
 
 if args.mRNA or args.all:
     sequence_comparison.compare_sequences(mRNA1, mRNA2, args.outfile)
