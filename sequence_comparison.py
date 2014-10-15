@@ -25,8 +25,13 @@ def compare_sequences(seq1, seq2, outfile=""):
     Expects both sequences to be of the same length.'''
     if len(seq1) != len(seq2):
         difference = abs(len(seq1) - len(seq2))
-        print "Sequences are not the same length;"
-        print "they differ by", str(difference), "characters."
+        if outfile:
+            with open(outfile, 'a') as f:
+                f.write("Sequences are not the same length;")
+                f.write("they differ by " + str(difference) + "characters.")
+        else:
+            print "Sequences are not the same length;"
+            print "they differ by", str(difference), "characters."
         return difference
     mctr = 0
     shorthand = ""
@@ -34,11 +39,16 @@ def compare_sequences(seq1, seq2, outfile=""):
         if seq1[i] != seq2[i]:
             # Output mutation shorthand, e.g., K136R
             shorthand = seq1[i] + str(i+1) + seq2[i]
-            print shorthand
             if outfile:
-                with open(outfile, 'a') as output_file:
-                    output_file.write(shorthand)
+                with open(outfile, 'a') as f:
+                    f.write(shorthand)
+            else:
+                print shorthand
             mctr += 1
     if mctr == 0:
-        print "No mismatches found - strings are identical"
+        if outfile:
+            with open(outfile, 'a') as f:
+                f.write("No mismatches found - strings are identical")
+        else:
+            print "No mismatches found - strings are identical"
     return mctr
