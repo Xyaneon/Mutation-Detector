@@ -78,8 +78,14 @@ sequence_type1 = args.infile1[0].lower()
 sequence_type2 = args.infile2[0].lower()
 if sequence_type1 in ["t", "template"]:
     sequence1 = cd.complement_DNA(sequence1)
+elif sequence_type1 not in ["c", "coding", "r", "mRNA"]:
+    print "Unrecognized sequence type for first sequence:", sequence_type1
+    exit(1)
 if sequence_type2 in ["t", "template"]:
     sequence2 = cd.complement_DNA(sequence2)
+elif sequence_type2 not in ["c", "coding", "r", "mRNA"]:
+    print "Unrecognized sequence type for second sequence:", sequence_type2
+    exit(1)
 
 if args.infile1[1] in ["3'", "3"]:
     sequence1 = cd.reverse_sequence(sequence1)
