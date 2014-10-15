@@ -74,9 +74,11 @@ for line in lines1:
 for line in lines2:
     sequence2 += line.upper().strip()
 
-if args.infile1[0] in ["t", "template"]:
+sequence_type1 = args.infile1[0].lower()
+sequence_type2 = args.infile2[0].lower()
+if sequence_type1 in ["t", "template"]:
     sequence1 = cd.complement_DNA(sequence1)
-if args.infile2[0] in ["t", "template"]:
+if sequence_type2 in ["t", "template"]:
     sequence2 = cd.complement_DNA(sequence2)
 
 if args.infile1[1] in ["3'", "3"]:
