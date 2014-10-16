@@ -92,21 +92,7 @@ C36U
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 7: Comparing mutantA with mutantB
-==============================================================================
-
-C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
-coding 3 test/mutantA.fasta coding 3 test/mutantB.fasta --compare-as all
-DNA sequence mutations:
-T19G
-C36T
-mRNA sequence mutations:
-U19G
-C36U
-Amino acid sequence mutations:
-Sequences are not the same length; they differ by 11 characters.
-
-Test Run 8: Comparing Human_CFTR_coding_sequence with Mary Allele A
+Test Run 7: Comparing Human_CFTR_coding_sequence with Mary Allele A
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -119,7 +105,7 @@ G4084A
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 9: Comparing Human_CFTR_coding_sequence with Mary Allele A1
+Test Run 8: Comparing Human_CFTR_coding_sequence with Mary Allele A1
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -132,7 +118,7 @@ G4084A
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 10: Comparing Human_CFTR_coding_sequence with Mary Allele B
+Test Run 9: Comparing Human_CFTR_coding_sequence with Mary Allele B
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -145,7 +131,7 @@ G2792A
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 11: Comparing Human_CFTR_coding_sequence with Tom Allele A
+Test Run 10: Comparing Human_CFTR_coding_sequence with Tom Allele A
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -158,7 +144,7 @@ Sequences are not the same length; they differ by 3 characters.
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 12: Comparing Human_CFTR_coding_sequence with Tom Allele A1
+Test Run 11: Comparing Human_CFTR_coding_sequence with Tom Allele A1
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -171,7 +157,7 @@ Sequences are not the same length; they differ by 3 characters.
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 13: Comparing Human_CFTR_coding_sequence with Tom Allele B
+Test Run 12: Comparing Human_CFTR_coding_sequence with Tom Allele B
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
