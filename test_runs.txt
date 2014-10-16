@@ -34,11 +34,11 @@ Test Run 2: Running against two custom FASTA sequences
 ==============================================================================
 Contents of my_fastaA.fasta:
 >my_fastaA
-ATGGGGAGGCGGUGGUGA
+ATGGGGAGGCGGTGGTGA
 
 Contents of my_fastaB.fasta:
 >my_fastaB
-ATGGGGAGGCGGUCGUGA
+ATGGGGAGGCGGTCGTGA
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
 coding 5 test/mine/my_fastaA.fasta coding 5 test/mine/my_fastaB.fasta
