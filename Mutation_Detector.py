@@ -34,41 +34,46 @@ Takes three strings indicating 1) coding, template, or mRNA, 2) 3' or 5', and
 3) filename.
 """
 
-def sequence_type_valid(sequence_type):
-    """Predicate returning True iff this is a valid sequence type."""
-    return sequence_type in ["t", "template",
-                             "c", "coding",
-                             "r", "mRNA"
-                            ]
+def is_coding_type(sequence_type):
+    """Predicate returning True iff this is a coding DNA sequence type."""
+    return sequence_type.lower() in ["c", "coding"]
 
-def sequence_type_is_DNA(sequence_type):
+def is_template_type(sequence_type):
+    """Predicate returning True iff this is a template DNA sequence type."""
+    return sequence_type.lower() in ["t", "template"]
+
+def is_DNA_type(sequence_type):
     """Predicate returning True iff this is a DNA sequence type."""
-    return sequence_type in ["t", "template",
-                             "c", "coding"
-                            ]
+    return is_coding_type(sequence_type) or is_template_type(sequence_type)
 
-def sequence_direction_valid(sequence_direction):
+def is_mRNA_type(sequence_type):
+    """Predicate returning True iff this is an mRNA sequence type."""
+    return sequence_type.lower() in ["r", "mrna"]
+
+def is_valid_type(sequence_type):
+    """Predicate returning True iff this is a valid sequence type."""
+    return is_DNA_type(sequence_type) or is_mRNA_type(sequence_type)
+
+def is_valid_direction(sequence_direction):
     """Predicate returning True iff this is a valid sequence direction."""
-    return sequence_direction in ["3", "3'",
-                                  "5", "5'"
-                                 ]
+    return sequence_direction in ["3", "3'", "5", "5'"]
 
 def validate_sequence_options(seqopt1, seqopt2):
     """Checks the sequence options for validity."""
     sequence_type1 = seqopt1[0].lower()
     sequence_type2 = seqopt2[0].lower()
-    if not sequence_type_valid(sequence_type1):
+    if not is_valid_type(sequence_type1):
         print "Invalid type for first sequence:", sequence_type1
         exit(1)
-    if not sequence_type_valid(sequence_type2):
+    if not is_valid_type(sequence_type2):
         print "Invalid type for second sequence:", sequence_type2
         exit(1)
     sequence_direction1 = seqopt1[1].lower()
     sequence_direction2 = seqopt2[1].lower()
-    if not sequence_direction_valid(sequence_direction1):
+    if not is_valid_direction(sequence_direction1):
         print "Invalid direction for first sequence:", sequence_direction1
         exit(1)
-    if not sequence_direction_valid(sequence_direction2):
+    if not is_valid_direction(sequence_direction2):
         print "Invalid direction for second sequence:", sequence_direction2
         exit(1)
     path1 = seqopt1[2]
@@ -171,29 +176,29 @@ if args.infile2[1] in ["3'", "3"]:
 DNA1 = DNA2 = ""
 mRNA1 = mRNA2 = ""
 protein1 = protein2 = ""
-if sequence_type_is_DNA(sequence_type1):
-    if sequence_type1 in ["t", "template"]:
+if is_DNA_type(sequence_type1):
+    if is_template_type(sequence_type1):
         DNA1 = cd.complement_DNA(sequence1)
-    elif sequence_type1 in ["c", "coding"]:
+    elif is_coding_type(sequence_type1):
         DNA1 = sequence1
-    elif sequence_type1 in ["r", "mrna"]:
+    elif is_mRNA_type(sequence_type1):
         mRNA1 = sequence1
     else:
         print "Unrecognized sequence type."
         exit(1)
-if sequence_type_is_DNA(sequence_type2):
-    if sequence_type2 in ["t", "template"]:
+if is_DNA_type(sequence_type2):
+    if is_template_type(sequence_type2):
         DNA2 = cd.complement_DNA(sequence2)
-    elif sequence_type2 in ["c", "coding"]:
+    elif is_coding_type(sequence_type2):
         DNA2 = sequence2
-    elif sequence_type2 in ["r", "mrna"]:
+    elif is_mRNA_type(sequence_type2):
         mRNA2 = sequence2
     else:
         print "Unrecognized sequence type."
         exit(1)
 
 if comparison_choice in ["DNA", "all"]:
-    if sequence_type_is_DNA(sequence_type1) and sequence_type_is_DNA(sequence_type2):
+    if is_DNA_type(sequence_type1) and is_DNA_type(sequence_type2):
         if comparison_choice == "all":
             output.write_output("DNA sequence mutations:")
         sequence_comparison.compare_sequences(DNA1, DNA2, output)
@@ -203,12 +208,17 @@ if comparison_choice in ["DNA", "all"]:
         print "Cannot compare non-DNA input sequence(s) as DNA."
         exit(1)
 
-if sequence_type_is_DNA(sequence_type1):
+if is_DNA_type(sequence_type1):
     mRNA1 = cd.transcribe_coding_sequence(DNA1)
-if sequence_type_is_DNA(sequence_type2):
+if is_DNA_type(sequence_type2):
     mRNA2 = cd.transcribe_coding_sequence(DNA2)
 
 if comparison_choice in ["mRNA", "all"]:
+    # Debug
+    print "mRNA1:"
+    print mRNA1
+    print "mRNA2:"
+    print mRNA2
     if mRNA1 and mRNA2:
         if comparison_choice == "all":
             output.write_output("mRNA sequence mutations:")
