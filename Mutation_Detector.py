@@ -17,7 +17,7 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/15/2014
+# Last modified: 10/16/2014
 
 import argparse
 import os.path
@@ -176,7 +176,7 @@ if sequence_type_is_DNA(sequence_type1):
         DNA1 = cd.complement_DNA(sequence1)
     elif sequence_type1 in ["c", "coding"]:
         DNA1 = sequence1
-    elif sequence_type1 in ["r", "mRNA"]:
+    elif sequence_type1 in ["r", "mrna"]:
         mRNA1 = sequence1
     else:
         print "Unrecognized sequence type."
@@ -186,7 +186,7 @@ if sequence_type_is_DNA(sequence_type2):
         DNA2 = cd.complement_DNA(sequence2)
     elif sequence_type2 in ["c", "coding"]:
         DNA2 = sequence2
-    elif sequence_type2 in ["r", "mRNA"]:
+    elif sequence_type2 in ["r", "mrna"]:
         mRNA2 = sequence2
     else:
         print "Unrecognized sequence type."
