@@ -67,7 +67,28 @@ lts.txt
 Contents of results.txt:
 G14C
 
-Test Run 5: Comparing mutantA sequence with humanCFTRcodingsequence
+Test Run 5: Comparing a template strand with a coding strand
+==============================================================================
+
+Contents of my_fastaA_template.fasta:
+>my_fastaA_template
+TACCCCTCCGCCACCACT
+
+Contents of my_fastaB.fasta:
+>my_fastaB
+ATGGGGAGGCGGTCGTGA
+
+C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
+template 5 test/mine/my_fastaA_template.fasta coding 5 test/mine/my_fastaB.fasta
+ --all
+DNA sequence mutations:
+G14C
+mRNA sequence mutations:
+G14C
+Amino acid sequence mutations:
+W5S
+
+Test Run 6: Comparing mutantA sequence with humanCFTRcodingsequence
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -79,7 +100,7 @@ G19U
 Amino acid sequence mutations:
 Sequences are not the same length; they differ by 11 characters.
 
-Test Run 6: Comparing mutantB sequence with humanCFTRcodingsequence
+Test Run 7: Comparing mutantB sequence with humanCFTRcodingsequence
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -92,7 +113,7 @@ C36U
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 7: Comparing Human_CFTR_coding_sequence with Mary Allele A
+Test Run 8: Comparing Human_CFTR_coding_sequence with Mary Allele A
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -105,7 +126,7 @@ G360A
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 8: Comparing Human_CFTR_coding_sequence with Mary Allele A1
+Test Run 9: Comparing Human_CFTR_coding_sequence with Mary Allele A1
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -118,7 +139,7 @@ G360A
 Amino acid sequence mutations:
 No mismatches found - strings are identical
 
-Test Run 9: Comparing Human_CFTR_coding_sequence with Mary Allele B
+Test Run 10: Comparing Human_CFTR_coding_sequence with Mary Allele B
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -131,7 +152,7 @@ G1652A
 Amino acid sequence mutations:
 G551D
 
-Test Run 10: Comparing Human_CFTR_coding_sequence with Tom Allele A
+Test Run 11: Comparing Human_CFTR_coding_sequence with Tom Allele A
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -144,7 +165,7 @@ Sequences are not the same length; they differ by 3 characters.
 Amino acid sequence mutations:
 Sequences are not the same length; they differ by 1 characters.
 
-Test Run 11: Comparing Human_CFTR_coding_sequence with Tom Allele A1
+Test Run 12: Comparing Human_CFTR_coding_sequence with Tom Allele A1
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
@@ -157,7 +178,7 @@ Sequences are not the same length; they differ by 3 characters.
 Amino acid sequence mutations:
 Sequences are not the same length; they differ by 1 characters.
 
-Test Run 12: Comparing Human_CFTR_coding_sequence with Tom Allele B
+Test Run 13: Comparing Human_CFTR_coding_sequence with Tom Allele B
 ==============================================================================
 
 C:\Users\chorton\Documents\GitHub\Mutation-Detector>python Mutation_Detector.py
