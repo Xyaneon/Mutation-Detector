@@ -154,13 +154,13 @@ try:
     with open(path1, 'r') as infile1_reading:
         lines1 = infile1_reading.readlines()[1:]
 except IOError:
-    print "Error: could not open first file:", args.infile1[2]
+    print "Error: could not open first file:", path1
     exit(1)
 try:
     with open(path2, 'r') as infile2_reading:
         lines2 = infile2_reading.readlines()[1:]
 except IOError:
-    print "Error: could not open second file:", args.infile2[2]
+    print "Error: could not open second file:", path2
     exit(1)
 for line in lines1:
     sequence1 += line.upper().strip()
@@ -181,21 +181,21 @@ if is_DNA_type(sequence_type1):
         DNA1 = cd.complement_DNA(sequence1)
     elif is_coding_type(sequence_type1):
         DNA1 = sequence1
-    elif is_mRNA_type(sequence_type1):
-        mRNA1 = sequence1
-    else:
-        print "Unrecognized sequence type."
-        exit(1)
+elif is_mRNA_type(sequence_type1):
+    mRNA1 = sequence1
+else:
+    print "Unrecognized sequence type."
+    exit(1)
 if is_DNA_type(sequence_type2):
     if is_template_type(sequence_type2):
         DNA2 = cd.complement_DNA(sequence2)
     elif is_coding_type(sequence_type2):
         DNA2 = sequence2
-    elif is_mRNA_type(sequence_type2):
-        mRNA2 = sequence2
-    else:
-        print "Unrecognized sequence type."
-        exit(1)
+elif is_mRNA_type(sequence_type2):
+    mRNA2 = sequence2
+else:
+    print "Unrecognized sequence type."
+    exit(1)
 
 if comparison_choice in ["DNA", "all"]:
     if is_DNA_type(sequence_type1) and is_DNA_type(sequence_type2):
@@ -214,11 +214,6 @@ if is_DNA_type(sequence_type2):
     mRNA2 = cd.transcribe_coding_sequence(DNA2)
 
 if comparison_choice in ["mRNA", "all"]:
-    # Debug
-    print "mRNA1:"
-    print mRNA1
-    print "mRNA2:"
-    print mRNA2
     if mRNA1 and mRNA2:
         if comparison_choice == "all":
             output.write_output("mRNA sequence mutations:")
@@ -232,11 +227,6 @@ if comparison_choice in ["mRNA", "all"]:
 if comparison_choice in ["protein", "all"]:
     protein1 = cd.translate_sequence(mRNA1)
     protein2 = cd.translate_sequence(mRNA2)
-    # Debug
-    print "Protein 1:"
-    print protein1
-    print "Protein 2:"
-    print protein2
     if comparison_choice == "all":
         output.write_output("Amino acid sequence mutations:")
     sequence_comparison.compare_sequences(protein1, protein2, output)
