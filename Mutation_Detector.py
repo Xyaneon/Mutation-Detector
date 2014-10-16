@@ -222,6 +222,11 @@ if comparison_choice in ["mRNA", "all"]:
 if comparison_choice in ["protein", "all"]:
     protein1 = cd.translate_sequence(mRNA1)
     protein2 = cd.translate_sequence(mRNA2)
+    # Debug
+    print "Protein 1:"
+    print protein1
+    print "Protein 2:"
+    print protein2
     if comparison_choice == "all":
         output.write_output("Amino acid sequence mutations:")
     sequence_comparison.compare_sequences(protein1, protein2, output)

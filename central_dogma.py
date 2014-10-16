@@ -116,7 +116,8 @@ def translate_sequence(rna, single_letter_mode=True):
     """Translates the given RNA sequence into a amino acid sequence (protein).
     This assumes that the 5' end comes first.
     The amino acid sequence is returned, N end first."""
-    rel_rna = trim_to_coding_rna(rna)
+    #rel_rna = trim_to_coding_rna(rna)
+    rel_rna = rna
     if rel_rna == "":
         return ""
     protein = ""

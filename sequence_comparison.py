@@ -17,9 +17,13 @@
 
 # MCS 5603 Intro to Bioinformatics, Fall 2014
 # Christopher Kyle Horton (000516274), chorton@ltu.edu
-# Last modified: 10/15/2014
+# Last modified: 10/16/2014
 
 from results_output import ResultsOutput
+
+def produce_shorthand(c1, index, c2):
+    '''Formats the given characters and position into a shorthand mutation.'''
+    return c1 + str(index + 1) + c2 + '\n'
 
 def compare_sequences(seq1, seq2, output):
     '''Compares two single-character sequences for substitution mutations.
@@ -28,18 +32,33 @@ def compare_sequences(seq1, seq2, output):
     if len(seq1) != len(seq2):
         difference = abs(len(seq1) - len(seq2))
         differ_len = "Sequences are not the same length; "
-        differ_len += "they differ by " + str(difference) + " characters."
+        differ_len += "they differ by " + str(difference) + " character"
+        if difference == 1:
+            differ_len += "."
+        else:
+            differ_len += "s."
         output.write_output(differ_len)
-        return difference
     mctr = 0
-    shorthand = ""
-    for i in range(0, len(seq1)):
+    shorthands = ""
+    for i in range(0, min(len(seq1), len(seq2))):
         if seq1[i] != seq2[i]:
             # Output mutation shorthand, e.g., K136R
-            shorthand = seq1[i] + str(i+1) + seq2[i]
-            output.write_output(shorthand)
+            shorthands += produce_shorthand(seq1[i], i, seq2[i])
             mctr += 1
+    if len(seq1) > len(seq2):
+        for i in range(len(seq2), len(seq1)):
+            shorthands += produce_shorthand(seq1[i], i, '-')
+            mctr += 1
+    elif len(seq1) < len(seq2):
+        for i in range(len(seq1), len(seq2)):
+            shorthands += produce_shorthand('-', i, seq2[i])
+            mctr += 1
+    output.write_output(shorthands)
     if mctr == 0:
         identical = "No mismatches found - strings are identical"
         output.write_output(identical)
+    elif mctr == 1:
+        output.write_output(str(mctr) + " mutation found.")
+    else:
+        output.write_output(str(mctr) + " mutations found.")
     return mctr
